@@ -37,4 +37,6 @@ tensor *tensor_flatten(tensor *t);
 /* destructor */
 void tensor_free(tensor *t);
 
+tensor *tensor_scale(tensor *t, int value);
+
 #endif

@@ -14,6 +14,8 @@ add_executable(tensor_test tensor_test.c)
 target_link_libraries(tensor_test tensor)
 add_executable(bench bench.c)
 target_link_libraries(bench tensor)
+add_executable(scale scale.c)
+target_link_libraries(scale tensor)
 
 # ## tests
 add_test(test_new ./tensor_test "new")
@@ -30,5 +32,6 @@ add_test(test_sum ./tensor_test "sum")
 add_test(test_max ./tensor_test "max")
 add_test(test_reshape ./tensor_test "reshape")
 add_test(test_flatten ./tensor_test "flatten")
+add_test(test_scale ./tensor_test "scale")
 
 # EOF

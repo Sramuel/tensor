@@ -19,22 +19,28 @@ int ones_data[] = {1, 1, 1, 1, 1, 1};
 
 /* *********************************************************** */
 
-static bool check_tensor(tensor *t, uint ndim, uint *shape, int *data) {
-  if (t == NULL) return false;
-  if (tensor_ndim(t) != ndim) return false;
+static bool check_tensor(tensor *t, uint ndim, uint *shape, int *data)
+{
+  if (t == NULL)
+    return false;
+  if (tensor_ndim(t) != ndim)
+    return false;
   uint *tshape = tensor_shape(t);
   for (int i = 0; i < ndim; i++)
-    if (tshape[i] != shape[i]) return false;
+    if (tshape[i] != shape[i])
+      return false;
   uint tsize = tensor_size(t);
   int *tdata = tensor_data(t);
   for (int i = 0; i < tsize; i++)
-    if (tdata[i] != data[i]) return false;
+    if (tdata[i] != data[i])
+      return false;
   return true;
 }
 
 /* *********************************************************** */
 
-bool test_new(void) {
+bool test_new(void)
+{
   tensor *t = tensor_new(2, sample_shape, sample_data);
   bool ok = check_tensor(t, 2, sample_shape, sample_data);
   tensor_free(t);
@@ -43,7 +49,8 @@ bool test_new(void) {
 
 /* *********************************************************** */
 
-bool test_zeros(void) {
+bool test_zeros(void)
+{
   tensor *t = tensor_zeros(2, zeros_shape);
   bool ok = check_tensor(t, 2, zeros_shape, zeros_data);
   tensor_free(t);
@@ -52,7 +59,8 @@ bool test_zeros(void) {
 
 /* *********************************************************** */
 
-bool test_ones(void) {
+bool test_ones(void)
+{
   tensor *t = tensor_ones(2, ones_shape);
   bool ok = check_tensor(t, 2, ones_shape, ones_data);
   tensor_free(t);
@@ -61,7 +69,8 @@ bool test_ones(void) {
 
 /* *********************************************************** */
 
-bool test_copy(void) {
+bool test_copy(void)
+{
   tensor *t0 = tensor_new(2, sample_shape, sample_data);
   bool ok0 = check_tensor(t0, 2, sample_shape, sample_data);
   tensor *t1 = tensor_copy(t0);
@@ -73,7 +82,8 @@ bool test_copy(void) {
 
 /* *********************************************************** */
 
-bool test_get(void) {
+bool test_get(void)
+{
   tensor *t = tensor_new(2, sample_shape, sample_data);
   bool ok0 = check_tensor(t, 2, sample_shape, sample_data);
   uint ndim = tensor_ndim(t);
@@ -86,7 +96,8 @@ bool test_get(void) {
 
 /* *********************************************************** */
 
-bool test_size(void) {
+bool test_size(void)
+{
   tensor *t = tensor_new(2, sample_shape, sample_data);
   bool ok = (tensor_size(t) == 6);
   tensor_free(t);
@@ -95,7 +106,8 @@ bool test_size(void) {
 
 /* *********************************************************** */
 
-bool test_element(void) {
+bool test_element(void)
+{
   tensor *t = tensor_new(2, sample_shape, sample_data);
   bool ok0 = check_tensor(t, 2, sample_shape, sample_data);
   uint indices[] = {1, 1};
@@ -109,7 +121,8 @@ bool test_element(void) {
 
 /* *********************************************************** */
 
-bool test_add(void) {
+bool test_add(void)
+{
   tensor *t0 = tensor_new(2, sample_shape, sample_data);
   tensor *t1 = tensor_new(2, sample_shape, sample_data);
   tensor *t2 = tensor_add(t0, t1);
@@ -123,7 +136,8 @@ bool test_add(void) {
 
 /* *********************************************************** */
 
-bool test_mul(void) {
+bool test_mul(void)
+{
   tensor *t0 = tensor_new(2, sample_shape, sample_data);
   tensor *t1 = tensor_new(2, sample_shape, sample_data);
   tensor *t2 = tensor_mul(t0, t1);
@@ -137,7 +151,8 @@ bool test_mul(void) {
 
 /* *********************************************************** */
 
-bool test_equal(void) {
+bool test_equal(void)
+{
   tensor *t0 = tensor_new(2, sample_shape, sample_data);
   tensor *t1 = tensor_new(2, sample_shape, sample_data);
   bool ok0 = check_tensor(t0, 2, sample_shape, sample_data);
@@ -150,7 +165,8 @@ bool test_equal(void) {
 
 /* *********************************************************** */
 
-bool test_sum(void) {
+bool test_sum(void)
+{
   tensor *t = tensor_new(2, sample_shape, sample_data);
   bool ok = (tensor_sum(t) == 21);
   tensor_free(t);
@@ -159,7 +175,8 @@ bool test_sum(void) {
 
 /* *********************************************************** */
 
-bool test_max(void) {
+bool test_max(void)
+{
   tensor *t = tensor_new(2, sample_shape, sample_data);
   bool ok = (tensor_max(t) == 6);
   tensor_free(t);
@@ -168,7 +185,8 @@ bool test_max(void) {
 
 /* *********************************************************** */
 
-bool test_reshape(void) {
+bool test_reshape(void)
+{
   tensor *t = tensor_new(2, sample_shape, sample_data);
   uint new_shape[] = {2, 3};
   tensor *t1 = tensor_reshape(t, 2, new_shape);
@@ -180,7 +198,8 @@ bool test_reshape(void) {
 
 /* *********************************************************** */
 
-bool test_flatten(void) {
+bool test_flatten(void)
+{
   tensor *t = tensor_new(2, sample_shape, sample_data);
   tensor *t1 = tensor_flatten(t);
   uint new_shape[] = {6};
@@ -192,15 +211,31 @@ bool test_flatten(void) {
 
 /* *********************************************************** */
 
-void usage(int argc, char *argv[]) {
+bool test_scale(void)
+{
+  tensor *t = tensor_new(2, sample_shape, sample_data);
+  tensor *t1 = tensor_scale(t, 3);
+  int expected_data[] = {3, 6, 9, 12, 15, 18};
+  bool ok = check_tensor(t1, 2, sample_shape, expected_data);
+  tensor_free(t);
+  tensor_free(t1);
+  return ok;
+}
+
+/* *********************************************************** */
+
+void usage(int argc, char *argv[])
+{
   fprintf(stderr, "Usage: %s <testname> [<...>]\n", argv[0]);
   exit(EXIT_FAILURE);
 }
 
 /* *********************************************************** */
 
-int main(int argc, char *argv[]) {
-  if (argc == 1) usage(argc, argv);
+int main(int argc, char *argv[])
+{
+  if (argc == 1)
+    usage(argc, argv);
 
   // start test
   fprintf(stderr, "=> Start test \"%s\"\n", argv[1]);
@@ -233,16 +268,22 @@ int main(int argc, char *argv[]) {
     ok = test_reshape();
   else if (strcmp("flatten", argv[1]) == 0)
     ok = test_flatten();
-  else {
+  else if (strcmp("scale", argv[1]) == 0)
+    ok = test_scale();
+  else
+  {
     fprintf(stderr, "Error: test \"%s\" not found!\n", argv[1]);
     exit(EXIT_FAILURE);
   }
 
   // print test result
-  if (ok) {
+  if (ok)
+  {
     fprintf(stderr, "Test \"%s\" finished: SUCCESS\n", argv[1]);
     return EXIT_SUCCESS;
-  } else {
+  }
+  else
+  {
     fprintf(stderr, "Test \"%s\" finished: FAILURE\n", argv[1]);
     return EXIT_FAILURE;
   }
